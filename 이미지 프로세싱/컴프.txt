@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<math.h>
+int R[1025][1281],G[1025][1281],B[1025][1281],gray[1025][1281],GJM;
+int main(){
+	int i,j,error,pi,gradient;
+	FILE *in=fopen("img01.bmp","rb");
+	FILE *out=fopen("result1.bmp","wb");
+	error=80;
+	GJM;
+	gradient=1.9;
+	pi=3.141592;
+	for(i=0;i<54;i++)
+		putc(getc(in),out);
+
+//윤곽선 알고리즘(성공 - gradient가 2 이상일 경우, 이상 발생) - GJM
+	for(i=0;i<1024;i++){
+		for(j=0;j<1280;j++){
+			gray[i][j]=B[i][j]*0.11+G[i][j]*0.59+R[i][j]*0.3;
+			B[i][j]=gray[i][j];
+			R[i][j]=gray[i][j];
+			G[i][j]=gray[i][j];
+			
+		}
+	}
+	for(i=0;i<=1024;i++){
+		for(j=0;j<=1280;j++){
+			if(gray[i][j]==0) gray[i][j]=1;
+		}
+	}
+	for(i=0;i<1024;i++){
+		for(j=0;j<1280;j++){
+			if((gray[i][j]/gray[i+1][j+1]>gradient||gray[i][j]/gray[i+1][j+1]<1/gradient)&&(gray[i][j]/gray[i+1][j]>gradient||gray[i][j]/gray[i+1][j]<1/gradient)&&(gray[i][j]/gray[i][j+1]>gradient||gray[i][j]/gray[i][j+1]<1/gradient))
+				continue;
+			else gray[i][j]=255;
+			
+		}
+	}
